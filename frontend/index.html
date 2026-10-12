@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkillDNA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style type="text/tailwindcss">
+    .card { @apply bg-white rounded-2xl shadow-sm border border-slate-200 p-6; }
+    .bar { transition: width .8s ease; }
+    .spin { border: 4px solid #e0e7ff; border-top-color: #4f46e5; border-radius: 50%; width: 48px; height: 48px; animation: s 1s linear infinite; }
+    @keyframes s { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+
+  <!-- Loader -->
+  <div id="loader" class="hidden fixed inset-0 bg-white/80 z-50 flex flex-col items-center justify-center gap-4">
+    <div class="spin"></div>
+    <p id="loaderText" class="text-indigo-700 font-medium">AI is thinking...</p>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="hidden fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-white shadow-lg"></div>
+
+  <!-- Auth -->
+  <section id="authView" class="hidden min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
+      <h1 class="text-3xl font-extrabold text-center">🧬 Skill<span class="text-indigo-600">DNA</span></h1>
+      <p class="text-center text-slate-500 text-sm mt-1 mb-6">AI Skill Assessment, Career Recommendation &amp; Roadmap</p>
+      <div class="flex mb-6 bg-slate-100 rounded-lg p-1">
+        <button id="tabLogin" class="flex-1 py-2 rounded-md font-medium bg-white shadow" onclick="setAuthMode('login')">Login</button>
+        <button id="tabRegister" class="flex-1 py-2 rounded-md font-medium" onclick="setAuthMode('register')">Register</button>
+      </div>
+      <form id="authForm" class="space-y-4">
+        <input id="aName" placeholder="Full name" class="hidden w-full border rounded-lg px-4 py-2.5 focus:outline-indigo-500" />
+        <input id="aEmail" type="email" placeholder="Email" required class="w-full border rounded-lg px-4 py-2.5 focus:outline-indigo-500" />
+        <input id="aPass" type="password" placeholder="Password" required class="w-full border rounded-lg px-4 py-2.5 focus:outline-indigo-500" />
+        <button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg font-semibold">Continue</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- App -->
+  <section id="appView" class="hidden min-h-screen flex flex-col md:flex-row">
+    <aside class="md:w-64 bg-slate-900 text-slate-200 md:min-h-screen p-4 flex md:flex-col gap-1 overflow-x-auto">
+      <div class="text-2xl font-extrabold text-white px-3 py-2 mb-4 hidden md:block">🧬 SkillDNA</div>
+      <nav id="nav" class="flex md:flex-col gap-1 flex-1"></nav>
+      <button onclick="logout()" class="text-left px-3 py-2 rounded-lg hover:bg-slate-800 text-red-300 whitespace-nowrap">⎋ Logout</button>
+    </aside>
+    <main id="view" class="flex-1 p-4 md:p-8 max-w-6xl w-full"></main>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
