@@ -167,7 +167,7 @@ const views = {
 
   assessment() {
     $("view").innerHTML = `
-      ${header("AI Skill Assessment", "Pick up to 5 skills — AI generates 5 questions per skill")}
+      ${header("AI Skill Assessment", "Pick up to 5 skills — AI generates 15 questions total")}
       <div class="card mb-6">
         ${me.skills.length ? `
           <div class="flex flex-wrap gap-2 mb-4">${me.skills.map((s, i) => `

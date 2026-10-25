@@ -179,16 +179,28 @@ def start_assessment(user):
         return jsonify(error="Add skills in your profile first"), 400
     out = ai_json(
         f"Create a skill assessment for a {user.get('year', '')} year {user.get('branch', '')} student. "
-        f"For EACH of these skills: {skills}, write exactly 5 multiple choice questions of mixed difficulty "
-        "(2 easy, 2 medium, 1 hard), practical and concept based. Return JSON: "
+        f"Write exactly 15 multiple choice questions total for these skills: {skills}. "
+        "Distribute the questions as evenly as possible across the selected skills, "
+        "with mixed difficulty (roughly 40% easy, 40% medium, 20% hard), practical and concept based. "
+        "Return JSON: "
         '{"questions": [{"skill": "<skill>", "question": "", "options": ["a","b","c","d"], "answer": <correct option index 0-3>}]}',
         temperature=0.7,
     )
     questions = []
     for q in out.get("questions", []):
-        if len(q.get("options", [])) == 4 and isinstance(q.get("answer"), int) and 0 <= q["answer"] <= 3:
+        if (
+            isinstance(q, dict)
+            and isinstance(q.get("options"), list)
+            and len(q["options"]) == 4
+            and isinstance(q.get("answer"), int)
+            and not isinstance(q.get("answer"), bool)
+            and 0 <= q["answer"] <= 3
+        ):
             q["id"] = uuid.uuid4().hex[:8]
             questions.append(q)
+    if len(questions) < 15:
+        return jsonify(error="AI returned an incomplete assessment. Please try again."), 502
+    questions = questions[:15]
     db().users.update_one({"_id": user["_id"]}, {"$set": {"pending_assessment": questions}})
     return jsonify(questions=[{k: q[k] for k in ("id", "skill", "question", "options")} for q in questions])
 
